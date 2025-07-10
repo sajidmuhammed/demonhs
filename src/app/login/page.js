@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
-import ScrollToMiddle from '../../components/common/ScrollToMiddle';
 
 export default function Login() {
   const [animateLock, setAnimateLock] = useState(false);
@@ -15,7 +14,6 @@ export default function Login() {
 
   return (
     <>
-      <ScrollToMiddle />
       <section className="relative w-full min-h-screen bg-[#f0f4f5] flex items-center justify-center px-4 py-5 overflow-hidden">
         <div className="hidden md:block z-10">
          <img
