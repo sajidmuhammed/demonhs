@@ -9,6 +9,7 @@ const useSignupForm = () => {
     handleSubmit,
     watch,
     formState: { errors },
+    reset,
   } = useForm();
 
   const triggerLockAnimation = () => {
@@ -23,6 +24,7 @@ const useSignupForm = () => {
     watch,
     animateLock,
     triggerLockAnimation,
+    reset,
   };
 };
 

@@ -4,11 +4,18 @@ import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { IoPersonCircle } from "react-icons/io5";
 import Link from "next/link";
+import { useAuthUser } from '../common/AuthContext';
+import useLogoutUser from "../../hooks/useLogout";
+import LoginLink from "../common/LoginLink";
+
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [animatingOut, setAnimatingOut] = useState(false);
+  const {user} = useAuthUser();
+  
+  const { logout, isLogoutLoading } = useLogoutUser();
 
   const toggleMenu = () => {
     if (menuOpen) {
@@ -29,13 +36,29 @@ const Header = () => {
       <div className="px-4 md:px-12 lg:px-20 xl:px-40 pb-3">
         <div className="flex justify-between pt-5 pb-5 items-center border-b border-gray-400">
           <div
-            className="bg-white w-[130px] h-[47px] flex items-center justify-center
+            className="bg-white w-[70px] h-[45px] text-center flex items-center justify-center
                       hover:bg-amber-300 text-blue-800 hover:text-white
                       transform transition duration-300 ease-in-out
                       hover:scale-105 hover:shadow-lg cursor-pointer"
           >
-            <Link prefetch={true} href={'/'} className="text-2xl tracking-widest">NHS</Link>
+            <Link prefetch={true} href={'/'} className="text-[10px] md:text-[15px] tracking-widest">NHS</Link>
           </div>
+          {!user ? (
+              <>
+                <LoginLink href="/auth/physician_login" label="Physician Login" />
+                <LoginLink href="/auth/patient_login" label="Patient Login" />
+              </>
+            ) : (
+              <>
+                {user?.userType === 'physician' ? (
+                  <LoginLink href="/doctor_dashboard" label="Physician Dashboard" />
+                ) : (
+                  <LoginLink href="/patient_dashboard" label="Patient Dashboard" />
+                )}
+              </>
+          )}
+
+
           <div className="hidden md:flex items-center gap-6">
             <div className="relative w-[250px]">
               <input
@@ -51,15 +74,28 @@ const Header = () => {
               </button>
             </div>
 
-            <div className="flex items-center">
-              <Link
-                prefetch={true}
-                href="/login"
-                className="text-white text-lg mr-2 underline hover:text-amber-300 transition duration-200 hover:scale-105"
-              >
-                My account
-              </Link>
-              <Link prefetch={true} href="/signup" className="group">
+               <div className="flex items-center">
+                              {user ? (
+                                <>
+                  <span className={`text-lg mr-2 font-semibold ${
+                    user.userType === 'patient' || user.userType === 'physician' ? 'text-yellow-200' : 'text-green-200'
+                  }`}>
+                    {user.fullName}
+                  </span>
+                  <button disabled={isLogoutLoading} onClick={logout} className="text-white mr-2 font-semibold">
+                    {isLogoutLoading ? 'Logging out..' : 'Logout'}</button>
+                  </>
+                ) : (
+                  <Link
+                    prefetch={true}
+                    href="/auth/login"
+                    className="text-white text-lg mr-2 underline hover:text-amber-300 transition duration-200 hover:scale-105"
+                  >
+                    My account
+                  </Link>
+                )}
+
+              <Link prefetch={true} href="/auth/signup" className="group">
                 <IoPersonCircle className="bg-white text-blue-800 w-7 h-7 rounded-full transition-transform duration-200 group-hover:scale-110 group-hover:text-amber-400" />
               </Link>
             </div>
@@ -144,12 +180,24 @@ const Header = () => {
             </div>
 
             <div className="flex items-center justify-center mt-4 group transition duration-200 hover:scale-105">
-              <Link
-                href="/login"
-                className="underline text-white text-lg mr-2 transition duration-200 group-hover:text-yellow-300"
-              >
-                My account
-              </Link>
+                          {user ? (
+                            <>
+                  <span className={`text-lg mr-2 font-semibold ${
+                    user.userType === 'patient' || user.userType === 'physician' ? 'text-yellow-200' : 'text-green-200'
+                  }`}>
+                    {user.fullName}
+                  </span>
+                  <button onClick={logout} className="text-white mr-2 font-semibold">Logout</button>
+                  </>
+                ) : (
+                  <Link
+                    prefetch={true}
+                    href="/auth/login"
+                    className="text-white text-lg mr-2 underline hover:text-amber-300 transition duration-200 hover:scale-105"
+                  >
+                    My account
+                  </Link>
+                )}
               <Link href="/signup" className="group">
                 <IoPersonCircle className="bg-white text-blue-800 w-7 h-7 rounded-full transition duration-200 group-hover:scale-110 group-hover:text-amber-400" />
               </Link>

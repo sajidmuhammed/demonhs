@@ -7,15 +7,17 @@ import {
   emailValidation,
   phoneValidation,
   dobValidation,
-  experienceValidation,
-  specialtyValidation,
+  ageValidation,
   passwordValidation,
   confirmPasswordValidation,
   descriptionValidation,
+  deceaseValidation,
 } from "../../helpers/validation";
 import ErrorMessage from "../reusableFields/ErrorMessage";
 import useSignupForm from "../../hooks/useFormSignUp";
-
+import useHandleSignup from "../../hooks/useHandleSignUpSubmit";
+import Link from "next/link";
+  
 const PatientSignUpComponent = () => {
 
     const {
@@ -25,10 +27,13 @@ const PatientSignUpComponent = () => {
     watch,
     animateLock,
     triggerLockAnimation,
+    reset,
     } = useSignupForm();
 
-    const onSubmit = (data) => {
-    console.log("Patient submitted:", data);
+    const { handleSignupSubmit, isLoading} = useHandleSignup();
+
+    const onSubmit = async(data) => {
+        handleSignupSubmit(data, 'patient', reset);
     };
 
     const handleButtonClick = () => {
@@ -100,11 +105,11 @@ const PatientSignUpComponent = () => {
         <div>
           <InputField
             type="number"
-            name="experience"
-            placeholder="Years of Experience"
-            {...register("experience", experienceValidation)}
+            name="age"
+            placeholder="enter your age"
+            {...register("age", ageValidation)}
           />
-          <ErrorMessage message={errors.experience?.message} />
+          <ErrorMessage message={errors.age?.message} />
         </div>
 
         {/* Specialty */}
@@ -113,9 +118,9 @@ const PatientSignUpComponent = () => {
             type="text"
             name="decease"
             placeholder="Decease"
-            {...register("decease", specialtyValidation)}
+            {...register("decease", deceaseValidation)}
           />
-          <ErrorMessage message={errors.specialty?.message} />
+          <ErrorMessage message={errors.decease?.message} />
         </div>
 
         {/* Password */}
@@ -152,14 +157,27 @@ const PatientSignUpComponent = () => {
         />
         <ErrorMessage message={errors.description?.message} />
       </div>
+      {isLoading && (
+        <>hai...</>
+      )}
 
       <button
         onClick={handleButtonClick}
         type="submit"
-        className="w-full py-2 mt-2 bg-[#007f3b] text-white rounded-md hover:bg-yellow-300 hover:text-black active:scale-95 active:ring-2 active:ring-yellow-400 transition transform duration-150"
+        className={`w-full py-2 mt-2 text-white rounded-md hover:bg-yellow-300 hover:text-black active:scale-95 active:ring-2 active:ring-yellow-400 transition transform duration-150 ${
+          isLoading ? 'bg-red-500' : 'bg-[#007f3b]'
+        }`}
+        disabled={isLoading}
       >
-        Submit
+        {isLoading ? 'Submitting...' : 'Submit'}
       </button>
+
+      <p className="mt-4 text-center text-gray-600 text-sm">
+              Already have an account?{' '}
+              <Link prefetch={true} href="/auth/patient_login" className="text-[#007f3b] hover:text-yellow-300 font-semibold">
+                Login
+              </Link>
+      </p>
     </form>
   );
 };

@@ -1,5 +1,6 @@
 // validation.js
 
+
 export const nameValidation = {
   required: "Full name is required",
   minLength: {
@@ -33,6 +34,12 @@ export const experienceValidation = {
   min: { value: 0, message: "Experience must be positive" },
 };
 
+export const ageValidation = {
+  required: "Age is required",
+  min: { value: 0, message: "Age must be a positive number"},
+  max: { value: 150, message: "Age cannot exceed 150"}
+}
+
 export const specialtyValidation = {
   required: "Specialty is required",
 };
@@ -44,6 +51,18 @@ export const passwordValidation = {
     message: "Password must be at least 6 characters",
   },
 };
+
+export const deceaseValidation = {
+  required: "Please mention your decease",
+  minLength: {
+    value: 3,
+    message: "Please enter atleast 3 characters"
+  },
+  maxLength: {
+    value: 20,
+    message: "Please enter accurate decease"
+  }
+}
 
 export const confirmPasswordValidation = (password) => ({
   required: "Please confirm your password",

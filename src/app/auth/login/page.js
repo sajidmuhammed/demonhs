@@ -104,7 +104,7 @@ export default function Login() {
               <div className="text-right mb-6">
                 <Link
                   prefetch={true}
-                  href="/forgotpassword"
+                  href="/auth/forgotpassword/login"
                   className="text-[#007f3b] hover:text-yellow-300 font-semibold text-sm"
                 >
                   Forgot password?

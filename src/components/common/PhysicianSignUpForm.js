@@ -15,6 +15,8 @@ import {
 } from "../../helpers/validation";
 import ErrorMessage from "../reusableFields/ErrorMessage";
 import useSignupForm from "../../hooks/useFormSignUp";
+import Link from "next/link";
+import useHandleSignup from "../../hooks/useHandleSignUpSubmit";
 
 const PhysicianSignupForm = () => {
 
@@ -25,10 +27,12 @@ const PhysicianSignupForm = () => {
     watch,
     animateLock,
     triggerLockAnimation,
+    reset,
     } = useSignupForm();
+    const { handleSignupSubmit, isLoading } = useHandleSignup();
 
-    const onSubmit = (data) => {
-    console.log("Patient submitted:", data);
+    const onSubmit = async (data) => {
+        handleSignupSubmit(data, 'physician', reset);
     };
 
     const handleButtonClick = () => {
@@ -153,13 +157,22 @@ const PhysicianSignupForm = () => {
             <ErrorMessage message={errors.description?.message} />
         </div>
 
-        <button
+         <button
             onClick={handleButtonClick}
             type="submit"
-            className="w-full py-2 mt-2 bg-[#007f3b] text-white rounded-md hover:bg-yellow-300 hover:text-black active:scale-95 active:ring-2 active:ring-yellow-400 transition transform duration-150"
+            className={`w-full py-2 mt-2 text-white rounded-md hover:bg-yellow-300 hover:text-black active:scale-95 active:ring-2 active:ring-yellow-400 transition transform duration-150 ${
+            isLoading ? 'bg-red-500' : 'bg-[#007f3b]'
+            }`}
+            disabled={isLoading}
         >
-            Submit
+            {isLoading ? 'Submitting...' : 'Submit'}
         </button>
+        <p className="mt-4 text-center text-gray-600 text-sm">
+              Already have an account?{' '}
+              <Link prefetch={true} href="/auth/physician_login" className="text-[#007f3b] hover:text-yellow-300 font-semibold">
+                Login
+              </Link>
+        </p>
         </form>
     );
 };
